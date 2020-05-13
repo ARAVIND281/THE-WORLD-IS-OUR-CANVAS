@@ -1,1 +1,2 @@
-# THE-WORLD-IS-OUR-CANVAS
+# synchronousBallMovement
+Ball moving synchronously
