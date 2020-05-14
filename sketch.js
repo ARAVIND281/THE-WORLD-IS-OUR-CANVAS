@@ -1,33 +1,34 @@
 var database;
 
 var drawing=[];
-var currentPath = [];
+var db_drawing;
+//var currentPath = [];
 var canvas;
-var isDrawing = false;
+//var isDrawing = false;
 
 
 function setup(){
   database = firebase.database();
   canvas = createCanvas(500,500);
-  canvas.mousePressed(startPath);
-  canvas.mouseReleased(endPath);
+  //canvas.mousePressed(startPath);
+  //canvas.mouseReleased(endPath);
   canvas.parent('canvascontainer');
   
 
-  var saveButton = select('#saveButton');
-  saveButton.mousePressed(saveDrawing);
+  var clearButton = select('#clearButton');
+  clearButton.mousePressed(clearDrawing);
 
   var ref = database.ref('drawing');
-  ref.on('value',gotData,errData); 
+  ref.on('value',gotData); 
 }
 
-function startPath(){
+function mousePressed{
   isDrawing = true;
-   currentPath = [];
-   drawing.push(currentPath);
+  // currentPath = [];
+   //drawing.push(currentPath);
 }
 
-function endPath(){
+function mouseReleased(){
   isDrawing = false;
 }
 
@@ -39,7 +40,7 @@ function draw(){
       x: mouseX,
       y: mouseY,
     }
-    currentPath.push(point);
+    drawing.push(point);
     var drawingRef = database.ref('drawing')
     drawingRef.set = ({
       "d" : drawing
@@ -50,12 +51,10 @@ function draw(){
   stroke(255);
   strokeWeight(4);
   noFill();
-  for(var i = 0; i < drawing.length; i++){
-    var path = drawing[i]
-    beginShape();
-    for(var j = 0; j < path.length; j++){
-    vertex(path[j].x,path[j].y)
-    }
+      beginShape();
+  for(var i = 0; i < db_drawing.length; i++){
+    vertex(db_drawing[j].x,db_drawing[j].y)
+  
     endShape();
   }
 
@@ -64,28 +63,13 @@ function draw(){
 }
 
 function saveDrawing(){
- var ref = database.ref('drawings');
- var data = {
-   name: "Aswin",
-   drawing:drawing
- }
- var result = ref.push(data,dataSent);
- console.log(result.key);
 
- function dataSent(err,  status){
-    console.log(status);
- }
 }
 
 function gotData(data) {
-  var drawing = data.val();
-  var keys = Object.keys(drawings);
-  for (var i = 0; i < keys.length; i++){
-    var Key = keys[i];
-    console.log(key);
-  }
+  
+        db_drawing = data.val().d
+    
+  
 }
 
-function errData(err){
-   console.log(err);
-}
